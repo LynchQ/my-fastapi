@@ -1,7 +1,8 @@
 import os
-import orjson as json
 from enum import Enum
-from typing import TypeVar, Type, Optional, Callable, Any
+from typing import Any, Callable, Optional, Type, TypeVar
+
+import orjson as json
 
 T = TypeVar("T")
 ENUM = TypeVar("ENUM", bound=Enum)
@@ -139,9 +140,7 @@ class Env:
                 del stack
 
         if "." not in str(name):
-            raise Exception(
-                f"Invalid settings module name {name}. Please import it with full package name"
-            )
+            raise Exception(f"Invalid settings module name {name}. Please import it with full package name")
         sep = "__"
         settings_prefix = str(name).replace(".", sep)
         # print('load settings from env for %s' % settings_prefix)
@@ -151,11 +150,7 @@ class Env:
             key = key[len(settings_prefix) + len(sep) :]
             if not key or sep in key:
                 continue
-            if (
-                key in settings
-                and settings[key] is not None
-                and not isinstance(settings[key], str)
-            ):
+            if key in settings and settings[key] is not None and not isinstance(settings[key], str):
                 try:
                     value = json.loads(value)
                 except Exception:
