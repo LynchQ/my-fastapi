@@ -1,8 +1,10 @@
 from functools import lru_cache
-from typing import List
+from typing import Final, List
 
+import logbook
 from pydantic import BaseSettings
 
+from app.common.constants import LogLevel
 from app.utils.env import Env
 
 
@@ -42,6 +44,11 @@ class Settings(BaseSettings):
 
     # 中间件
     ALLOW_ORIGINS: List[str] = Env.json(name="ALLOW_ORIGINS", default=["*"], description="允许跨域的域名")
+
+    # LOG
+    LOG_LEVEL: Final = LogLevel(
+        logbook.lookup_level(Env.string("LOG_LEVEL", "DEBUG" if Env.string("DEBUG", "false").lower() in {"true", "1", "yes"} else "INFO").upper())
+    )
 
 
 @lru_cache(maxsize=128)
