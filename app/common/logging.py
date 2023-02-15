@@ -67,13 +67,14 @@ class JsonFormatter(StringFormatter):
         return message
 
     def format_record(self: "JsonFormatter", record: LogRecord, handler: ColorizedStderrHandler) -> str:
+        # 如果日志内容为dict，则将func_name, filename, lineno从dict中取出并赋值给record的对应属性
         if isinstance(record.message, dict):
             if "__func" in record.message:
-                record.func_name = record.message.pop("__func")
+                record.func_name = record.message.pop("__func")  # 函数名
             if "__filename" in record.message:
-                record.filename = record.message.pop("__filename")
+                record.filename = record.message.pop("__filename")  # 文件名
                 if "__lineno" in record.message:
-                    record.lineno = record.message.pop("__lineno")
+                    record.lineno = record.message.pop("__lineno")  # 行号
                 else:
                     record.lineno = 0  # type: ignore
 
@@ -116,10 +117,12 @@ class Logger(logbook.Logger):
                 handler.formatter = json_formatter  # type: ignore
 
         self.async_write = async_write
+        # 是否异步写入日志 并且 未创建进程
         if self.async_write and not hasattr(Logger, "log_queue"):
             with _log_process_creator_mutex:
                 if not hasattr(Logger, "log_queue"):
-                    Logger.log_queue = Queue()
+                    Logger.log_queue = Queue()  # 创建队列
+                    # 创建进程
                     Logger.log_process = Process(
                         target=_log_writer,
                         args=(
@@ -128,6 +131,6 @@ class Logger(logbook.Logger):
                             Logger.log_queue,
                         ),
                     )
-                    Logger.log_process.daemon = True
-                    Logger.log_process.start()
+                    Logger.log_process.daemon = True  # daemon 是否为守护进程
+                    Logger.log_process.start()  # 启动进程
             self._log = types.MethodType(_log, self)
