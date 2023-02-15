@@ -2,8 +2,11 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
+from app.common.logging import Logger
 from app.conf.settings import settings
 from app.db.sql import BASE_TORTOISE_ORM
+
+logger = Logger("myapp")
 
 
 def get_application() -> FastAPI:
@@ -15,6 +18,7 @@ def get_application() -> FastAPI:
         redoc_url=settings.REDOC_URL,  # 文档地址
         openapi_url=settings.OPENAPI_URL,  # 文档地址
     )
+    logger.info({"docs_url": f"http://0.0.0.0:8000/{settings.DOCS_URL}"})  # 打印些提示到日志
 
     # 中间件
     app.add_middleware(
@@ -28,6 +32,7 @@ def get_application() -> FastAPI:
     # 异常处理
     @app.exception_handler(Exception)
     async def common_exception_handler(request: Request, e: Exception) -> JSONResponse:
+        logger.exception(e)
         return JSONResponse(
             content={
                 "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
