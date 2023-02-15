@@ -18,7 +18,7 @@ def get_application() -> FastAPI:
         redoc_url=settings.REDOC_URL,  # 文档地址
         openapi_url=settings.OPENAPI_URL,  # 文档地址
     )
-    logger.info({"docs_url": f"http://0.0.0.0:8000/{settings.DOCS_URL}"})  # 打印些提示到日志
+    logger.info({"docs_url": f"http://{settings.APP_HOST}:{settings.APP_PORT}{settings.DOCS_URL}"})  # 打印些提示到日志
 
     # 中间件
     app.add_middleware(

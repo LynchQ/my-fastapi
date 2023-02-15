@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     DOCS_URL = "/docs"
     OPENAPI_URL: str = "/openapi.json"
     REDOC_URL: str = "/redoc"
+    APP_HOST: str = Env.string(name="APP_HOST", default="0.0.0.0")
+    APP_PORT: int = Env.int(name="APP_PORT", default=9001)
     DEBUG: bool = Env.boolean(name="DEBUG", default=False, description="是否开启调试模式")
 
     # 数据库(使用的MySQL)
