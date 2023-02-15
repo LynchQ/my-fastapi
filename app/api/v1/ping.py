@@ -1,12 +1,13 @@
 from fastapi import APIRouter
 
 from app.common.logging import Logger
+from app.schemas.http import ResponseModel
 
 router = APIRouter()
 logger = Logger("ping")
 
 
 @router.get("")
-async def ping() -> dict:
+async def ping() -> ResponseModel:
     logger.info({"action": "ping"})
-    return {"code": "200", "reason": "", "message": "pong", "data": ""}
+    return ResponseModel(data="pong")
