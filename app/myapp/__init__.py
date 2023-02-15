@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
 from app.conf.settings import settings
+from app.db.sql import BASE_TORTOISE_ORM
 
 
 def get_application() -> FastAPI:
@@ -35,5 +36,9 @@ def get_application() -> FastAPI:
             },
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
+
+    # 数据库
+    torroise_orm = BASE_TORTOISE_ORM
+    app.torroise_orm = torroise_orm  # type: ignore
 
     return app
