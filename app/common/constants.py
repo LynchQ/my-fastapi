@@ -12,3 +12,11 @@ class LogLevel(int, Enum):
     Debug = logbook.DEBUG
     Trace = logbook.TRACE
     NotSet = logbook.NOTSET
+
+
+class UserStatus(str, Enum):
+    """用户状态: 未验证 -> 启用 -> 禁用"""
+
+    NotVerified = "NotVerified"
+    Active = "Active"
+    Inactive = "Inactive"
